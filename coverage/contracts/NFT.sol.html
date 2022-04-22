@@ -1,0 +1,1625 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/NFT.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> NFT.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">89.42% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>93/104</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">82.76% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>48/58</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">81.08% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>30/37</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">89.62% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>95/106</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">48×</span>
+<span class="cline-any cline-yes">48×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">48×</span>
+<span class="cline-any cline-yes">48×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">142×</span>
+<span class="cline-any cline-yes">142×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">142×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">141×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">140×</span>
+<span class="cline-any cline-yes">133×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">133×</span>
+<span class="cline-any cline-yes">110×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">133×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">133×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">131×</span>
+<span class="cline-any cline-yes">37×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">135×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">135×</span>
+<span class="cline-any cline-yes">172×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">172×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">171×</span>
+<span class="cline-any cline-yes">171×</span>
+<span class="cline-any cline-yes">171×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">171×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">171×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">171×</span>
+<span class="cline-any cline-yes">107×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">64×</span>
+<span class="cline-any cline-yes">953×</span>
+<span class="cline-any cline-yes">35×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-yes">633×</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1757×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">275×</span>
+<span class="cline-any cline-yes">223×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">52×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">138×</span>
+<span class="cline-any cline-yes">118×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">55×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">55×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">64×</span>
+<span class="cline-any cline-yes">64×</span>
+<span class="cline-any cline-yes">64×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">64×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">172×</span>
+<span class="cline-any cline-yes">172×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">42×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">48×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">48×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">209×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">74×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">153×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.11;
+&nbsp;
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./WhitelistManager.sol";
+&nbsp;
+import "hardhat/console.sol";
+&nbsp;
+/**
+ * todo: emit events
+ * todo: add function to remove a single an address from whitelist
+ * todo: add function to remove a list of addresses from whitelist
+ */
+contract NFT is Ownable, ERC721Enumerable, WhitelistManager {
+    using Address for address;
+    using SafeMath for uint256;
+    using Strings for string;
+&nbsp;
+    uint256 constant MAX_INT = 2**256 - 1;
+&nbsp;
+    //
+    uint256 public maxSupply;
+    uint256 price;  // price for minting a single NFT
+    uint256 public maxCountPerMint = 10;   // how many NFT a user can mint at once
+&nbsp;
+    /*
+     * Pause the minting when reaching a given number of minted tokens (eg. if 100: 100 tokens are minted, and then minting is paused)
+     * Notes:
+     *  - if &gt;= 0, it pauses the minting as soon as countMinted reaches the limit
+     *  - if &lt; 0 (in particular -1 is used to indicate there's no limit), pausing will never be applied
+     */
+    int256 public pauseAfterMintingTokenCount = -1;
+&nbsp;
+    //
+    bool mintingPaused;
+    uint256 public countMinted = 0; // number of tokens minted so far, by anyone
+&nbsp;
+    /*
+     * How many NFT a user can mint overall (useful during whitelist)
+     * Notes:
+     *  - if &gt;= 0, limit is applied
+     *  - if &lt; 0 (in particular -1 is used to indicate there's no limit), there's no limit on how many NFTs a user can mint (overall, not ina single mint)
+     *  - if mintAccessMode is Whitelist, it considers minted NFTs during that whitelist
+     */
+    int256 private maxMintablePerUser = -1;
+&nbsp;
+    mapping(uint256 =&gt; bool) private mintedTokenIds;    // Used for random token ID assignment
+&nbsp;
+    //
+    address payable public mainWallet;  // the wallet receiving the NFT payment
+&nbsp;
+    // minting access mode (DEFAULT = free minting, WHITELIST = with whitelist)
+    enum MintAccessMode{ DEFAULT, WHITELIST }
+    MintAccessMode mintAccessMode;
+&nbsp;
+    // NFT configuration
+    string public baseTokenURI;
+&nbsp;
+    /**
+     *
+     */
+    constructor(string memory _name, string memory _symbol, uint256 _price, uint256 _maxSupply, address payable _mainWallet) ERC721(_name, _symbol) ERC721Enumerable() {
+        setMainWallet(_mainWallet);
+        _setMaxSupply(_maxSupply);
+&nbsp;
+        unpauseMinting();
+        setMintAccessModeDefault(_price, -1, -1, false);
+    }
+&nbsp;
+    /************************************************************************************************************************************
+     * MINT
+     ***********************************************************************************************************************************/
+&nbsp;
+    /**
+     *
+     */
+    function mint(uint256 _count) public payable {
+        address _buyer = msg.sender;
+        uint256 previousCountMinted = countMinted;
+&nbsp;
+        require(_count &gt; 0, "Cannot mint 0 NFTs.");
+&nbsp;
+        // check number of NFT to mint
+        require(_count &lt;= maxCountPerMint, "Cannot mint more than allowed at once.");
+&nbsp;
+        // check collection supply limit
+        require(countRemainingTokens() &gt; 0, "There are currently no mintable NFTs.");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_count &lt;= countRemainingTokens(), "You want to mint too many NFTs: current limit would be crossed.");
+&nbsp;
+        // check minting paused after limit
+        if (pauseAfterMintingTokenCount &gt;= 0 &amp;&amp; previousCountMinted &lt; uint256(pauseAfterMintingTokenCount)) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>require(uint256(pauseAfterMintingTokenCount) &gt;= countMinted + _count, "Minting would be paused before completion.");
+        }
+&nbsp;
+        // check per user limit
+        int256 _countMintablePerUser = getCountMintablePerUser(_buyer);
+&nbsp;
+        if (_countMintablePerUser &gt;= 0) {
+            require(_count &lt;= uint256(_countMintablePerUser), "You cannot mint more NFT currently.");
+        }
+&nbsp;
+        // handle mode "whitelist"
+        if (isMintAccessModeWhitelist()) {
+            require(isInWhitelist(_buyer), "You are not whitelisted.");
+&nbsp;
+            // keep track of minted NFT for each user
+            WhitelistManager.updateTokenBalance(_buyer, _count);
+        }
+&nbsp;
+        /**
+         * calculate total price
+         */
+        uint256 _totalPrice = calculatePricePerMint(_count);
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(msg.value &gt;= _totalPrice, "Amount of ETH to purchase NFTs is insufficient.");
+&nbsp;
+        /**
+         * handle payment
+         */
+        _handleNFTPayment(_totalPrice);
+        
+        /**
+         * if msg.value is larger than the amount to pay, give the exceeding back to sender
+         */
+        uint256 exceedingAmount = msg.value - _totalPrice;
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (exceedingAmount &gt; 0) {
+<span class="cstat-no" title="statement not covered" >            _transferToWallet(exceedingAmount, payable(_buyer))</span>;
+        }
+&nbsp;
+        /**
+         * mint
+         */
+        _mint(_count, _buyer);
+&nbsp;
+        // pause minting if count minted is greater then limit to pause
+        if (pauseAfterMintingTokenCount &gt; 0 &amp;&amp; previousCountMinted &lt; uint256(pauseAfterMintingTokenCount) &amp;&amp; countMinted &gt;= uint256(pauseAfterMintingTokenCount)) {
+            pauseMinting();
+        }
+    }
+&nbsp;
+    /**
+     *
+     */
+    function mintByOwner(uint256 _count, address _receiver) public onlyOwner {
+        bool previouslyPaused = isMintingPaused();
+&nbsp;
+        if (previouslyPaused) {
+            unpauseMinting();
+        }
+&nbsp;
+        _mint(_count, _receiver);
+&nbsp;
+        if (previouslyPaused &amp;&amp; !isMintingPaused()) {
+            pauseMinting();
+        }
+    }
+&nbsp;
+    /**
+     *
+     */
+    function _mint(uint256 _count, address _receiver) internal {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_count &gt; 0, "Cannot mint 0 NFTs.");
+&nbsp;
+        for (uint i = 0; i &lt; _count; i++) {
+            _mintSingleNFT(_receiver);
+        }
+    }
+&nbsp;
+    /**
+     *
+     */
+    function _mintSingleNFT(address _to) internal mintingNotPaused {
+        // check collection supply limit
+        require(maxSupply &gt;= countMinted + 1, "Max supply reached.");
+&nbsp;
+        // generate token id and mint
+        uint256 _tokenId = _getRandomTokenId();
+        _safeMint(_to, _tokenId);
+        mintedTokenIds[_tokenId] = true;
+&nbsp;
+        //
+        countMinted++;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function _getRandomTokenId() internal view returns (uint256) {
+        uint256 _randomTokenId = uint256(keccak256(
+            abi.encodePacked(
+                msg.sender,
+                block.coinbase,
+                block.difficulty,
+                block.gaslimit,
+                block.timestamp,
+                countMinted
+            )
+        )) % maxSupply;
+&nbsp;
+        // if the random token id has not been used, return it
+        if (_isTokenIdUsable(_randomTokenId)) {
+            return _randomTokenId;
+        }
+&nbsp;
+        // search on the right
+        for (uint256 i = _randomTokenId+1; i &lt; maxSupply; i++) {
+            if (_isTokenIdUsable(i)) {
+                return i;
+            }
+        }
+&nbsp;
+        // search on the left
+        for (uint256 i = _randomTokenId-1; i &gt;= 0; i--) {
+            if (_isTokenIdUsable(i)) {
+                return i;
+            }
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        require(false, "Unable to find a random token ID")</span>;
+<span class="cstat-no" title="statement not covered" >        return 0;</span>
+    }
+&nbsp;
+    /**
+     * Return true if "tokenId" can be used to mint a new NFT (as to say that it has not been used already)
+     */
+    function _isTokenIdUsable(uint256 tokenId) internal view returns(bool) {
+        return mintedTokenIds[tokenId] != true;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function calculatePricePerMint(uint256 _count) public view returns (uint256) {
+        return price.mul(_count);
+    }
+&nbsp;
+    /**
+     * Return the number of tokens left before reaching the total supply
+     */
+    function countRemainingTokens() public view returns (uint256) {
+        if (pauseAfterMintingTokenCount &gt; 0 &amp;&amp; countMinted &lt;= uint256(pauseAfterMintingTokenCount)) {
+            return uint256(pauseAfterMintingTokenCount) - countMinted;
+        }
+&nbsp;
+        return maxSupply - countMinted;
+    }
+&nbsp;
+    /**
+     * Return the number of tokens that a single user can still mint overall (not in a single mint)
+     */
+    function getCountMintablePerUser(address _user) public view returns (int256) {
+        if (maxMintablePerUser &lt; 0) {
+            return maxMintablePerUser;
+        }
+&nbsp;
+        if (isMintAccessModeWhitelist()) {
+            return int256(uint256(maxMintablePerUser) - WhitelistManager.getTokenBalance(_user));
+        }
+&nbsp;
+        int256 output = maxMintablePerUser - int256(balanceOf(_user));
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (output &lt; 0) {
+<span class="cstat-no" title="statement not covered" >            return 0;</span>
+        }
+&nbsp;
+        return output;
+    }
+&nbsp;
+    /**
+     * Return the list of Token IDs owned by _owner
+     */
+    function tokensOfOwner(address _owner) external view returns (uint256[] memory) {
+        uint tokenCount = balanceOf(_owner);
+        uint[] memory tokensId = new uint256[](tokenCount);
+&nbsp;
+        for (uint i = 0; i &lt; tokenCount; i++) {
+            tokensId[i] = tokenOfOwnerByIndex(_owner, i);
+        }
+&nbsp;
+        return tokensId;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function setMintAccessModeDefault(uint256 _price, int256 _maxMintablePerUser, int256 _pauseAfterMintingTokenCount, bool _unpauseMinting) public onlyOwner {
+        mintAccessMode = MintAccessMode.DEFAULT;
+&nbsp;
+        _updateMintingConfiguration(_price, _maxMintablePerUser, _pauseAfterMintingTokenCount, _unpauseMinting);
+    }
+&nbsp;
+    /**
+     *
+     */
+    function setMintAccessModeWhitelist(uint256 _price, int256 _maxMintablePerUser, int256 _pauseAfterMintingTokenCount, bool _unpauseMinting, bool _startNewWhitelist) public onlyOwner {
+        mintAccessMode = MintAccessMode.WHITELIST;
+&nbsp;
+        _updateMintingConfiguration(_price, _maxMintablePerUser, _pauseAfterMintingTokenCount, _unpauseMinting);
+&nbsp;
+        if (_startNewWhitelist == true) {
+            startNewWhitelist();
+        }
+    }
+&nbsp;
+    /**
+     *
+     */
+    function _updateMintingConfiguration(uint256 _price, int256 _maxMintablePerUser, int256 _pauseAfterMintingTokenCount, bool _unpauseMinting) internal {
+        price = _price;
+        maxMintablePerUser = _maxMintablePerUser;
+        pauseAfterMintingTokenCount = _pauseAfterMintingTokenCount;
+&nbsp;
+        // unpause minting
+        if (_unpauseMinting == true &amp;&amp; isMintingPaused()) {
+            unpauseMinting();
+        }
+    }
+&nbsp;
+    /************************************************************************************************************************************
+     * PAYMENT UTILS
+     ***********************************************************************************************************************************/
+&nbsp;
+    /**
+     *
+     */
+    function _handleNFTPayment(uint256 _amount) internal {
+        _transferToWallet(_amount, mainWallet);
+    }
+&nbsp;
+    /**
+     *
+     */
+    function _transferToWallet(uint256 _amount, address payable receiver) internal {
+        (bool success, ) = receiver.call{value: _amount}("");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(success, "Transfer failed.");
+    }
+&nbsp;
+    /************************************************************************************************************************************
+     * UTILS
+     ***********************************************************************************************************************************/
+&nbsp;
+    /**
+     * var percentage eg. 600 = 6%
+     */
+<span class="fstat-no" title="function not covered" >    function _calculatePercentage(uint256 amount, uint256 percentage) internal pure returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        return amount * percentage / 10000;</span>
+    }
+&nbsp;
+    /**
+     * 
+     */
+    modifier mintingNotPaused {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(!isMintingPaused(), "Minting is paused.");
+        _;
+    }
+&nbsp;
+    /************************************************************************************************************************************
+     * WHITELIST UTILS
+     ***********************************************************************************************************************************/
+&nbsp;
+    /**
+     *
+     */
+    function setMaxMintablePerUser(int256 _value) public onlyOwner {
+        maxMintablePerUser = _value;
+    }
+&nbsp;
+    /**
+     * todo: rename to isWhitelisted
+     */
+    function isInWhitelist(address _address) public view returns (bool) {
+        return WhitelistManager.isWhitelisted(_address);
+    }
+&nbsp;
+    /**
+     * todo: improve checking how much gas is left and returning the number of "accepted" addresses
+     */
+    function addToWhitelist(address[] calldata _addresses) external onlyOwner {
+        WhitelistManager.add(_addresses);
+    }
+&nbsp;
+    /**
+     * todo: add test
+     */
+<span class="fstat-no" title="function not covered" >    function removeFromWhitelist(address[] calldata _addresses) external onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >        WhitelistManager.remove(_addresses)</span>;
+    }
+&nbsp;
+    /**
+     * todo: add a method to easily empty the whitelist
+     * todo: add a method to get the length of the whitelist
+     */
+    function startNewWhitelist() public onlyOwner {
+        WhitelistManager.startNew();
+    }
+&nbsp;
+    /************************************************************************************************************************************
+     * NFT
+     ***********************************************************************************************************************************/
+&nbsp;
+    /**
+     *
+     */
+<span class="fstat-no" title="function not covered" >    function _baseURI() internal view virtual override returns (string memory) {</span>
+<span class="cstat-no" title="statement not covered" >        return baseTokenURI;</span>
+    }
+&nbsp;
+    /**
+     *
+     */
+<span class="fstat-no" title="function not covered" >    function getBaseURI() public view returns (string memory) {</span>
+<span class="cstat-no" title="statement not covered" >        return baseTokenURI;</span>
+    }
+&nbsp;
+    /**
+     *
+     */
+<span class="fstat-no" title="function not covered" >    function setBaseURI(string memory _baseTokenURI) public onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >        baseTokenURI = _baseTokenURI</span>;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function setMainWallet(address payable _address) public onlyOwner {
+        mainWallet = _address;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function _setMaxSupply(uint256 _amount) internal {
+//        require(_amount &gt;= countMinted, "New supply cannot be less than he number of already minted tokens.");
+&nbsp;
+        maxSupply = _amount;
+    }
+&nbsp;
+    /************************************************************************************************************************************
+     * Minting
+     ***********************************************************************************************************************************/
+&nbsp;
+    /**
+     *
+     */
+    function setPrice(uint256 _amount) public onlyOwner {
+        price = _amount;
+    }
+&nbsp;
+    /**
+     *
+     */
+<span class="fstat-no" title="function not covered" >    function setMaxCountPerMint(uint256 _amount) public onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >        maxCountPerMint = _amount</span>;
+    }
+&nbsp;
+    /**
+     *
+     */
+<span class="fstat-no" title="function not covered" >    function setPauseAfterMintingTokenCount(int256 _value) public onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >        pauseAfterMintingTokenCount = _value</span>;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function isMintingPaused() public view returns (bool) {
+        return mintingPaused;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function pauseMinting() public {
+        mintingPaused = true;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function unpauseMinting() public {
+        mintingPaused = false;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function isMintAccessModeDefault() public view returns (bool) {
+        return mintAccessMode == MintAccessMode.DEFAULT;
+    }
+&nbsp;
+    /**
+     *
+     */
+    function isMintAccessModeWhitelist() public view returns (bool) {
+        return mintAccessMode == MintAccessMode.WHITELIST;
+    }
+&nbsp;
+    /************************************************************************************************************************************
+     *
+     ***********************************************************************************************************************************/
+&nbsp;
+    /**
+     *
+     */
+    function getInfo() public view returns (bool, bool, bool, uint256, uint256, uint256, uint256) {
+        return (
+            isMintAccessModeDefault(),
+            isMintAccessModeWhitelist(),
+            isMintingPaused(),
+            maxSupply,
+            countMinted,
+            countRemainingTokens(),
+            maxCountPerMint
+        );
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Apr 22 2022 10:22:35 GMT+0200 (Ora legale dell’Europa centrale)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
